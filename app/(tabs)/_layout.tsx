@@ -24,6 +24,7 @@ export default function TabLayout() {
             editable
             maxLength={40}
             onChangeText={(text) => onChangeText(text)}
+            placeholderTextColor={Colors[colorScheme ?? "light"].text}
             style={{
               padding: 10,
               fontSize: 20,
