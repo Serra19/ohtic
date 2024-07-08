@@ -1,36 +1,47 @@
-import { Image, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  FlatList,
+  ActivityIndicator,
+  TouchableOpacity,
+} from "react-native"
 
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
 
-import { Link } from 'expo-router';
+import { Link } from "expo-router"
 
-export default function MoviesScreen() {
-  const dispatch = useDispatch();
-  const popularMovies = useSelector((state: any) => state.movies.popular.results);
-  const loading = useSelector((state: any) => state.movies.popular.loading);
-  const searching = useSelector((state: any) => state.search.query);
-  const searchResults = useSelector((state: any) => state.search.results.results);
+export default function TvSeriesScreen() {
+  const dispatch = useDispatch()
+  const popularTvSeries = useSelector(
+    (state: any) => state?.tvSeries?.popular?.results
+  )
+  const loading = useSelector((state: any) => state?.tvSeries?.popular?.loading)
+  const searching = useSelector((state: any) => state.search.query)
+  const searchResults = useSelector(
+    (state: any) => state.search.results.results
+  )
 
-  const [page, setPage] = useState(1);
-
-  const [moviesToShow, setMoviesToShow] = useState(popularMovies);
+  const [page, setPage] = useState(1)
+  const [tvSeriesToShow, setTvSeriesToShow] = useState(popularTvSeries)
 
   useEffect(() => {
-    dispatch({ type: "LOAD_POPULAR_MOVIES", page })
-  }, []);
+    dispatch({ type: "LOAD_POPULAR_TVSERIES", page })
+  }, [])
 
   useEffect(() => {
     if (searching) {
-      setMoviesToShow(searchResults?.filter((item: any) => item.media_type === "movie"));
+      setTvSeriesToShow(
+        searchResults?.filter((item: any) => item.media_type === "tv")
+      )
     } else {
-      setMoviesToShow(popularMovies);
+      setTvSeriesToShow(popularTvSeries)
     }
   }, [searchResults])
 
   const loadNextPage = () => {
-    setPage(page + 1);
-    dispatch({ type: "LOAD_POPULAR_MOVIES", page })
+    setPage(page + 1)
+    dispatch({ type: "LOAD_POPULAR_TVSERIES", page })
   }
 
   const renderFooter = () => {
@@ -41,15 +52,15 @@ export default function MoviesScreen() {
 
   return (
     <FlatList
-      data={moviesToShow}
+      data={tvSeriesToShow}
       numColumns={2}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => {
         return (
           <Link
             href={{
-              pathname: "/movieDetails",
-              params: { id: item.id }
+              pathname: "/tvSerieDetails",
+              params: { id: item.id },
             }}
             asChild
           >
@@ -79,14 +90,14 @@ export default function MoviesScreen() {
       ListFooterComponent={renderFooter}
       onEndReached={loadNextPage}
       onEndReachedThreshold={0.5}
-    />
+    ></FlatList>
   )
 }
 
 const styles = StyleSheet.create({
   titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
   },
   stepContainer: {
@@ -98,6 +109,6 @@ const styles = StyleSheet.create({
     width: 290,
     bottom: 0,
     left: 0,
-    position: 'absolute',
+    position: "absolute",
   },
-});
+})
